@@ -38,7 +38,8 @@ import {
 import { Upload, Loader2, Plus, Trash2, Eye, RefreshCw } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+
 
 interface LineItem {
   itemNumber: string
