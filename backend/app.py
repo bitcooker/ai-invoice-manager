@@ -19,7 +19,7 @@ CORS(app)
 
 # Configuration
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
-DATABASE = 'invoice_database.db'
+DATABASE = os.getenv('DATABASE_PATH', 'invoice_database.db')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Use /tmp for serverless environments, otherwise use local uploads folder
