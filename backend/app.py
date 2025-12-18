@@ -18,24 +18,16 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
+UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
 DATABASE = os.getenv('DATABASE_PATH', 'invoice_database.db')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-
-# Use /tmp for serverless environments, otherwise use local uploads folder
-if os.path.exists('/tmp'):
-    UPLOAD_FOLDER = '/tmp/invoice_uploads'
-else:
-    UPLOAD_FOLDER = 'uploads'
 
 client = None
 if OPENAI_API_KEY:
     client = OpenAI(api_key=OPENAI_API_KEY)
 
-try:
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-except OSError:
-    UPLOAD_FOLDER = '/tmp'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -241,12 +233,6 @@ def upload_file():
         file.save(filepath)
         
         extracted_data = extract_invoice_data(filepath)
-
-        # Clean up temp file
-        try:
-            os.remove(filepath)
-        except:
-            pass
         
         return jsonify({
             'success': True,
